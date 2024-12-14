@@ -18,5 +18,7 @@ def get_data():
 
 items = get_data()
 
+st.table(items) 
+
 for item in items:
     st.write(f" The user {item['user']} password is : {item['pwd']}:")
