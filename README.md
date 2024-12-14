@@ -1,0 +1,2 @@
+# kinoApp
+Kino Management App
