@@ -12,27 +12,23 @@ def select_signup():
     """Switch to the sign-up form."""
     st.session_state.form = 'signup_form'
 
-def authenticate_user():
-    """
-    Handles user authentication.
-    Returns True if the user is authenticated, False otherwise.
-    """
-    # Initialize Session State for Username and Form
-    if 'username' not in st.session_state:
-        st.session_state.username = ''
-    if 'form' not in st.session_state:
-        st.session_state.form = ''
+def login_form():
+        login_form = st.sidebar.form(key='login_form', clear_on_submit=True)
+        username = login_form.text_input(label='Enter Username')
+        user_pas = login_form.text_input(label='Enter Password', type='password')
+        login = login_form.form_submit_button(label='Sign In')
+        
+        if login:
+            user = user_db.find_one({'user': username, 'pwd': user_pas})
+            if user:
+                user_update(username)
+                st.sidebar.success(f"Welcome back, {username.upper()}!")
+                st.rerun()
+            else:
+                st.sidebar.error('Invalid username or password.')
 
-    # If the user is already authenticated, return True
-    if st.session_state.username != '':
-        st.sidebar.success(f"You are logged in as {st.session_state.username.upper()}")
-        return True
-
-    # If not authenticated, show login or sign-up forms
-    st.sidebar.write("### Authentication")
-    
-    if st.session_state.form == 'signup_form':
-        # Sign-Up Form
+def signup_form():
+    # Sign-Up Form
         signup_form = st.sidebar.form(key='signup_form', clear_on_submit=True)
         new_username = signup_form.text_input(label='Enter Username*')
         new_user_email = signup_form.text_input(label='Enter Email Address*')
@@ -54,23 +50,35 @@ def authenticate_user():
                 user_update(new_username)
                 st.sidebar.success(f"Welcome, {new_username.upper()}!")
                 st.rerun()
+        
+        login_form()
+
+def authenticate_user():
+    """
+    Handles user authentication.
+    Returns True if the user is authenticated, False otherwise.
+    """
+    # Initialize Session State for Username and Form
+    if 'username' not in st.session_state:
+        st.session_state.username = ''
+    if 'form' not in st.session_state:
+        st.session_state.form = ''
+
+    # If the user is already authenticated, return True
+    if st.session_state.username != '':
+        st.sidebar.success(f"You are logged in as {st.session_state.username.upper()}")
+        return True
+
+    # If not authenticated, show login or sign-up forms
+    st.sidebar.write("### Authentication")
+    
+    if st.session_state.form == 'signup_form':
+        signup_form()
 
     else:
         # Login Form
-        login_form = st.sidebar.form(key='login_form', clear_on_submit=True)
-        username = login_form.text_input(label='Enter Username')
-        user_pas = login_form.text_input(label='Enter Password', type='password')
-        login = login_form.form_submit_button(label='Sign In')
+        login_form()
         
-        if login:
-            user = user_db.find_one({'user': username, 'pwd': user_pas})
-            if user:
-                user_update(username)
-                st.sidebar.success(f"Welcome back, {username.upper()}!")
-                st.rerun()
-            else:
-                st.sidebar.error('Invalid username or password.')
-    
     # Create Account Button
     if st.session_state.form != 'signup_form':
         st.sidebar.button("Create Account", on_click=select_signup)
