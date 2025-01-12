@@ -1,11 +1,25 @@
-#features.py
 import streamlit as st
 from data_manager import get_data
+from fbfeature.commingFilmsList import load_films, display_films
 
-def display_key_features(items):
+information = get_data("users", "user_accounts")
+
+films = load_films()
+
+filmList = [
+            {"Title": film.get("title", "No Title"), "Booked From": film.get("booked_from", "No Date")}
+            for film in films
+        ]
+
+def display_key_features():
     """Display the key features of the app."""
-    st.write("### Key Features")
-    application = st.selectbox('Choose an action:', ('Do something', 'Do something again'))
-    st.write(f"You selected: {application}")
-    st.write("### Items from the Database:")
-    st.table(items)
+    
+    # Fetch and display user data from the 'users' database
+    st.write("### User Information:")
+    st.table(information)
+# Fetch and display films data from the 'comingFilms' collection
+    st.write("### Coming Films:")
+    st.table(filmList)
+
+    
+    display_films(films)

@@ -4,7 +4,6 @@ from data_manager import get_data
 from features import display_key_features
 
 # Fetch data from the database
-items = get_data()
 #st.title("Kino Manager App")
 st.markdown('<h1 style="display: flex; align-items: center;"><i class="fa-solid fa-film" style="margin-right: 10px;"></i> Kino Manager App</h1>', unsafe_allow_html=True)
 st.markdown('<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">', unsafe_allow_html=True)
@@ -12,7 +11,7 @@ st.markdown('<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0
 # Authenticate the user
 if authenticate_user():
     # If authenticated, display the features
-    display_key_features(items)
+    display_key_features()
     logout()  # Show the logout button
 else:
     # If not authenticated, only show the authentication forms
