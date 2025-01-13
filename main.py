@@ -1,3 +1,4 @@
+# main.py
 import streamlit as st
 from authenticator import authenticate_user, logout
 from data_manager import get_data
