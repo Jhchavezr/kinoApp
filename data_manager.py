@@ -37,3 +37,7 @@ def insert_data(db_name, collection_name, data):
         collection.insert_many(data)  # Insert multiple documents
     elif isinstance(data, dict):
         collection.insert_one(data)  # Insert a single document
+
+
+class User:
+    def __init__  (self, users )
