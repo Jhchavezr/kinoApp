@@ -30,6 +30,7 @@ def publish_to_facebook(message, image_url):
 
     # Get the GPT token from the user's information
     page_access_token = current_user.get('fbToken')
+rsync -av -e "ssh -i /path/to/UBUNTUSERVERKEY.pem" --exclude='.*' --exclude='venv' ./ ubuntu@52.15.210.68:/home/ubuntu/kinoApp/
 
     page_id = current_user.get('fbPage')
 
