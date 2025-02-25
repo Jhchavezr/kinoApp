@@ -8,6 +8,7 @@ def user_update(name):
     """Update the session state with the logged-in username."""
     st.session_state.username = name
 
+
 def select_signup():
     """Switch to the sign-up form."""
     st.session_state.form = 'signup_form'

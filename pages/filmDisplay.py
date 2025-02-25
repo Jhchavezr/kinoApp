@@ -1,7 +1,6 @@
 #pages/filmDisplay.py
 import streamlit as st
 from fbfeature.commingFilmsList import load_films, display_films
-from authenticator import authenticate_user
 
 # Check if the user is authenticated
 if "username" in st.session_state and st.session_state.username:
