@@ -1,6 +1,7 @@
 # fbfeature/fbfunctions.py
 import streamlit as st
 import facebook as fb
+import requests
 from data_manager import get_data
 
 def prepare_facebook_post(film):
@@ -15,7 +16,7 @@ def prepare_facebook_post(film):
 
 def publish_to_facebook(message, image_url):
     """Publish a message and optional image URL to Facebook."""
-   # Retrieve the username from session state
+    # Retrieve the username from session state
     username = st.session_state.get('username')
     
     if not username:
@@ -28,9 +29,8 @@ def publish_to_facebook(message, image_url):
     if not current_user:
         return "User not found."
 
-    # Get the GPT token from the user's information
+    # Get the page access token from the user's information
     page_access_token = current_user.get('fbToken')
-
     page_id = current_user.get('fbPage')
 
     if not page_access_token:
@@ -40,15 +40,26 @@ def publish_to_facebook(message, image_url):
     try:
         graph_api = fb.GraphAPI(page_access_token)
         if image_url:
-            response = graph_api.put_object(
-                parent_object='me',
-                connection_name='photos',
-                message=message,
-                url=image_url,
-                published=True 
-            )
+            # Download the image from the URL
+            image_response = requests.get(image_url)
+            if image_response.status_code == 200:
+                with open("temp_image.jpg", "wb") as f:
+                    f.write(image_response.content)
+                # Upload the image to Facebook
+                response = graph_api.put_photo(
+                    image=open("temp_image.jpg", 'rb'),
+                    message=message,
+                    album_path=f"{page_id}/photos"
+                )
+            else:
+                st.error("Failed to download the image.")
+                return
         else:
-            response = graph_api.put_object('me', 'feed', message=message)
+            response = graph_api.put_object(
+                parent_object=page_id,
+                connection_name='feed',
+                message=message
+            )
 
         if 'id' in response:
             st.success(f"Post published successfully! Post ID: {response['id']}")
